@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import math
 from torch.autograd import Variable
 
 
@@ -9,17 +10,18 @@ def weights_init(m):
     if classname.find('Linear') != -1:
         # weight_shape = list(m.weight.data.size())
         # fan_in = weight_shape
-        nn.init.normal_(m.weight)
-        m.bias.fill_(0)
+        nn.init.xavier_normal(m.weight)
+        # nn.init.normal_(m.weight)
+        nn.init.constant(m.bias, 0.0)
 
 class network(torch.nn.Module):
-    def __init__(self, opt, input_dim = 453, class_num = 76):
+    def __init__(self, opt, input_dim = 500, class_num = 79):
         super(network, self).__init__()
 
         self.fc1 = nn.Linear(input_dim, 128)
-        self.fc2 = nn.Linear(256, 256)
-        self.fc3 = nn.Linear(256, 256)
-        self.fc4 = nn.Linear(256, class_num)
+        self.fc2 = nn.Linear(128, 256)
+        self.fc3 = nn.Linear(256, 128)
+        self.fc4 = nn.Linear(128, class_num)
 
         self.apply(weights_init)
 
